@@ -35,7 +35,7 @@ const Dashboard = () => {
   };
 
   const StatCard = ({ title, value, icon: Icon, color = 'primary', trend }) => (
-    <Card className="p-6">
+    <Card className="p-6 hover-lift">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>
@@ -47,7 +47,7 @@ const Dashboard = () => {
             </p>
           )}
         </div>
-        <div className={`p-3 bg-${color}-100 rounded-full`}>
+        <div className={`p-3 bg-${color}-100 rounded-full animate-float`}>
           <Icon className={`w-6 h-6 text-${color}-600`} />
         </div>
       </div>
@@ -55,7 +55,7 @@ const Dashboard = () => {
   );
 
   const RecentRequest = ({ request }) => (
-    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+    <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover-lift transition-all">
       <div className="flex items-center space-x-3">
         <div className={`p-2 rounded-full ${
           request.status === 'Approved' ? 'bg-success-100' :
@@ -147,7 +147,7 @@ const Dashboard = () => {
       {/* Contenu principal */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Demandes récentes */}
-        <Card title="Demandes récentes" className="h-fit">
+        <Card title="Demandes récentes" className="h-fit animate-slide-in-left">
           <div className="space-y-3">
             {requests.slice(0, 5).map((request) => (
               <RecentRequest key={request.id} request={request} />
@@ -162,15 +162,15 @@ const Dashboard = () => {
         </Card>
 
         {/* Actions rapides */}
-        <Card title="Actions rapides">
+        <Card title="Actions rapides" className="animate-slide-in-right">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors">
+            <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-all hover-lift">
               <Calendar className="w-8 h-8 text-primary-600 mx-auto mb-2" />
               <p className="font-medium text-gray-900">Nouvelle demande</p>
               <p className="text-sm text-gray-600">Créer une demande d'heures sup</p>
             </button>
             
-            <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors">
+            <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-all hover-lift">
               <TrendingUp className="w-8 h-8 text-primary-600 mx-auto mb-2" />
               <p className="font-medium text-gray-900">Mes statistiques</p>
               <p className="text-sm text-gray-600">Voir mes heures du mois</p>
