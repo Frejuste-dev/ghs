@@ -5,6 +5,7 @@ from datetime import date, time, datetime
 from dotenv import load_dotenv
 
 from database import Database
+from sqlmodel import select
 from models import Service, Employee, Account, ContractType, ProfileType
 from auth import get_password_hash
 
@@ -58,6 +59,13 @@ def init_database():
         
         created_services = []
         for service_data in services_data:
+            existing = session.exec(
+                select(Service).where(Service.serviceCode == service_data["serviceCode"]) 
+            ).first()
+            if existing:
+                created_services.append(existing)
+                print(f"  ℹ️ Service déjà présent: {existing.serviceName} ({existing.serviceCode}) — ignoré")
+                continue
             service = Service(**service_data)
             session.add(service)
             session.commit()
@@ -99,6 +107,13 @@ def init_database():
         
         created_employees = []
         for employee_data in employees_data:
+            existing = session.exec(
+                select(Employee).where(Employee.employeeNumber == employee_data["employeeNumber"]) 
+            ).first()
+            if existing:
+                created_employees.append(existing)
+                print(f"  ℹ️ Employé déjà présent: {existing.firstName} {existing.lastName} ({existing.employeeNumber}) — ignoré")
+                continue
             employee = Employee(**employee_data)
             session.add(employee)
             session.commit()
@@ -133,14 +148,19 @@ def init_database():
         ]
         
         for account_data in accounts_data:
+            existing = session.exec(
+                select(Account).where(Account.username == account_data["username"]) 
+            ).first()
+            if existing:
+                print(f"  ℹ️ Compte déjà présent: {existing.username} ({existing.profile.name}) — ignoré")
+                continue
             # Hacher le mot de passe
             account_data["password"] = get_password_hash(account_data["password"])
-            
             account = Account(**account_data)
             session.add(account)
             session.commit()
             session.refresh(account)
-            print(f"  ✅ Compte créé: {account.username} ({account.profile})")
+            print(f"  ✅ Compte créé: {account.username} ({account.profile.name})")
         
         print("\n🎉 Initialisation terminée avec succès !")
         print("\n📋 Comptes de test créés:")

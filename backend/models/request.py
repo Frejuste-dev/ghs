@@ -36,7 +36,10 @@ class Request(SQLModel, table=True):
     updatedAt: datetime = Field(default_factory=datetime.utcnow)
     
     # Relations
-    employee: Optional["Employee"] = Relationship(back_populates="requests")
+    employee: Optional["Employee"] = Relationship(
+        back_populates="requests",
+        sa_relationship_kwargs={"foreign_keys": "Request.employeeID"}
+    )
     creator: Optional["Employee"] = Relationship(
         back_populates="created_requests",
         sa_relationship_kwargs={"foreign_keys": "Request.createdBy"}

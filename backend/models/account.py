@@ -2,15 +2,17 @@ from datetime import datetime
 from typing import Optional
 from enum import Enum
 from sqlmodel import SQLModel, Field, Relationship
+from sqlalchemy import Column
+from sqlalchemy.types import String
 
 
 class ProfileType(str, Enum):
-    """Types de profils utilisateur."""
+    """Types de profils utilisateur (valeurs alignées avec l'ENUM MySQL)."""
 
-    VALIDATOR = "Validator"
-    SUPERVISOR = "Supervisor"
-    ADMINISTRATOR = "Administrator"
-    COORDINATOR = "Coordinator"
+    VALIDATOR = "VALIDATOR"
+    SUPERVISOR = "SUPERVISOR"
+    ADMINISTRATOR = "ADMINISTRATOR"
+    COORDINATOR = "COORDINATOR"
 
 
 class Account(SQLModel, table=True):
@@ -22,7 +24,8 @@ class Account(SQLModel, table=True):
     employeeID: int = Field(foreign_key="employees.employeeID", unique=True)
     username: str = Field(max_length=50, unique=True, index=True)
     password: str = Field(max_length=255)
-    profile: ProfileType = Field(default=ProfileType.VALIDATOR)
+    # Store as plain string to be compatible with existing DB values without altering schema
+    profile: str = Field(sa_column=Column(String(32)), default="Validator")
     isActive: bool = Field(default=True)
     lastLogin: Optional[datetime] = Field(default=None)
     resetToken: Optional[str] = Field(default=None, max_length=100)

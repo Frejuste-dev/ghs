@@ -33,7 +33,10 @@ class Employee(SQLModel, table=True):
     # Relations
     service: Optional["Service"] = Relationship(back_populates="employees")
     account: Optional["Account"] = Relationship(back_populates="employee")
-    requests: List["Request"] = Relationship(back_populates="employee")
+    requests: List["Request"] = Relationship(
+        back_populates="employee",
+        sa_relationship_kwargs={"foreign_keys": "Request.employeeID"}
+    )
     created_requests: List["Request"] = Relationship(
         back_populates="creator",
         sa_relationship_kwargs={"foreign_keys": "Request.createdBy"}
